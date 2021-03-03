@@ -10,41 +10,32 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-const int width = 960;
-const int height = 960;
-int grey[width][height][3];
-int binary[width][height][3];
-void drawGrey(){
-        ofstream myfile;
-        myfile.open("grey.ppm"); //write to output.ppm
-        myfile<<"P3 "<<  width << " " << height << " "<< "255\n";
-        for (int i = 0; i < height; i++) {
-            for (int j =0; j <  width; j++)
-                for(int k=0; k<3;k++)
-                    myfile<<grey[j][i][k]<<' ';
-            myfile<<"\n";
-        }
-        myfile.close();
-}
-void drawBinary(){
-        ofstream myfile;
-        myfile.open("binary.ppm"); //write to output.ppm
-        myfile<<"P3 " << width << " " << height << " "<< "1\n";
-        for (int i = 0; i < height; i++) {
-            for (int j =0; j <  width; j++)
-                for(int k=0; k<3;k++)
-                    myfile<<binary[j][i][k]<<' ';
-            myfile<<"\n";
-        }
-        myfile.close();
-}
-void part1(){
 
+void part1(){
     int r,g, b;
-    ifstream infile("input.ppm");
+    ifstream infile("image.ppm");
     string line;
     getline(infile, line);
     getline(infile, line);
+
+     const int width = std::stoi(line.substr(0,line.find(" ")));
+     const int height = std::stoi(line.substr(line.find(" ")+1));
+
+    int ***grey = new int**[width];
+    for(int i=0;i<width;i++){
+        grey[i] = new int*[height];
+        for(int j =0; j<height; j++){
+            grey[i][j] = new int[3];
+        }
+    }
+     int ***binary = new int**[width];
+    for(int i=0;i<width;i++){
+        binary[i] = new int*[height];
+        for(int j =0; j<height; j++){
+            binary[i][j] = new int[3];
+        }
+    }
+
     getline(infile, line);
     int count = 0;
     while(getline(infile, line)){ //fill grey matrix
@@ -61,7 +52,16 @@ void part1(){
             count++;
         }
     }
-    drawGrey();
+    ofstream myfile;
+        myfile.open("imageg.ppm"); //write to output.ppm
+        myfile<<"P3 "<<  width << " " << height << " "<< "255\n";
+        for (int i = 0; i < height; i++) {
+            for (int j =0; j <  width; j++)
+                for(int k=0; k<3;k++)
+                    myfile<<grey[j][i][k]<<' ';
+            myfile<<"\n";
+        }
+        myfile.close();
     int derivX[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
     int derivY[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
     for(int x=1; x<width-1; x++){
@@ -104,7 +104,15 @@ void part1(){
             }
         }
     }
-    drawBinary();
+        myfile.open("imagem.ppm"); //write to output.ppm
+        myfile<<"P3 " << width << " " << height << " "<< "1\n";
+        for (int i = 0; i < height; i++) {
+            for (int j =0; j <  width; j++)
+                for(int k=0; k<3;k++)
+                    myfile<<binary[j][i][k]<<' ';
+            myfile<<"\n";
+        }
+        myfile.close();
 
     //derivatives for G(X)
     //magnitude of G(X) and choose threshold
