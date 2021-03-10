@@ -229,6 +229,7 @@ void part2(){
     }
     const int low = 150;
     const int high = 250;
+    const int threshold = 200;
     for(int x=0; x<width; x++){
         for(int y=0; y<height; y++){
             if(binary[x][y][0]>=high){
@@ -367,6 +368,7 @@ void part2(){
     }
     for(int x=1; x<width-1; x++){ //what to do about the very edges of the image for angles and then how does the algo work? straight lines ie
         for(int y=1; y<height-1; y++){
+                if(binary[x][y][0]>=threshold){ //do you need to compute hystheris only on values that are above a threshold?
                 angle[x][y] = int((int(angle[x][y]+(45/2))))/45 * 45;
                 if(angle[x][y] == 0 || angle[x][y] == 180 || angle[x][y] == -0 || angle[x][y]==-180){
                     if(binary[x][y][0] >= binary[x-1][y][0] && binary[x][y][0] >= binary[x+1][y][0]){
@@ -398,6 +400,7 @@ void part2(){
                         n[x][y][1] = 1;
                         n[x][y][2] = 1;
                     }
+                }
                 }
         }
     }
