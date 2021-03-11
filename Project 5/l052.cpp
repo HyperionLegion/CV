@@ -191,8 +191,8 @@ void part2(){
             myfile<<"\n";
         }
         myfile.close();
-    int derivX[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-    int derivY[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+    int derivY[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int derivX[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
     for(int x=1; x<width-1; x++){
         for(int y=1; y<height-1;y++){
             int yvalue = 0;
@@ -227,9 +227,8 @@ void part2(){
             h[i][j] = new int[3];
         }
     }
-    const int low = 150;
-    const int high = 250;
-    const int threshold = 200;
+    const int low = 200;
+    const int high = 300;
     for(int x=0; x<width; x++){
         for(int y=0; y<height; y++){
             if(binary[x][y][0]>=high){
@@ -368,8 +367,10 @@ void part2(){
     }
     for(int x=1; x<width-1; x++){ //what to do about the very edges of the image for angles and then how does the algo work? straight lines ie
         for(int y=1; y<height-1; y++){
-                if(binary[x][y][0]>=threshold){ //do you need to compute hystheris only on values that are above a threshold?
-                angle[x][y] = int((int(angle[x][y]+(45/2))))/45 * 45;
+                if(angle[x][y]>=0)
+                    angle[x][y] = int(angle[x][y]+(22.5))/45 * 45;
+                else
+                    angle[x][y] = int(angle[x][y]-(22.5))/45 * 45;
                 if(angle[x][y] == 0 || angle[x][y] == 180 || angle[x][y] == -0 || angle[x][y]==-180){
                     if(binary[x][y][0] >= binary[x-1][y][0] && binary[x][y][0] >= binary[x+1][y][0]){
                         n[x][y][0] = 1;
@@ -400,7 +401,6 @@ void part2(){
                         n[x][y][1] = 1;
                         n[x][y][2] = 1;
                     }
-                }
                 }
         }
     }
