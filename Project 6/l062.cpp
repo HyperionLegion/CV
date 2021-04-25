@@ -12,41 +12,119 @@
 using namespace std;
 #define PI 3.14159265358979
 int** votes;
-int*** circles;
-void drawCircle(int xcint, int ycint, int colors[3], int radius, int width, int height) { //draw circle of 2 with specified color at the x and y coordinate
+int *** radius;
+int *** circles;
+int** edge;
+void drawCircle(int xcint, int ycint, int colors[3], int radius, int width, int height){ //draw circle of 2 with specified color at the x and y coordinate
             //colors is an array of 3 ints to represent RGB for drawing
-    int a, b, xmax, b2, b2_new, tb;
-    xmax = int(radius * 0.70710678 + 0.5);
-    b = int(radius + 0.5);
-    b2 = b * b;
-    tb = (2 * b) - 1;
-    b2_new = b2;
-    for (a = 0; a <= xmax + 1; a++) {
-        if (b2 - b2_new >= tb) {
-            b2 -= tb;
-            b -= 1;
-            tb -= 2;
+            int a, b, xmax, b2, b2_new, tb;
+            xmax = int(radius*0.70710678+0.5);
+            b = int(radius+0.5);
+            b2 = b*b;
+            tb = (2*b)-1;
+            b2_new = b2;
+            for(a = 0; a<=xmax+1; a++){
+                if(b2-b2_new>=tb){
+                    b2 -=tb;
+                    b-=1;
+                    tb-=2;
+                }
+                    if(ycint+b<height&&xcint+a<width&&ycint+b>=0&&xcint+a>=0){
+                    circles[ycint+b][xcint+a][0]=colors[0],circles[ycint+b][xcint+a][1]=colors[1],circles[ycint+b][xcint+a][2]=colors[2];
+                    // cout << circles[ycint+b][xcint+a][0];
+                    }
+                    if(ycint-b>=0&&xcint+a<width&&ycint-b<height&&xcint+a>=0){
+                    circles[ycint-b][xcint+a][0]=colors[0],circles[ycint-b][xcint+a][1]=colors[1],circles[ycint-b][xcint+a][2]=colors[2];
+                    // cout <<  circles[ycint-b][xcint+a][0];
+                    }
+                    if(ycint+b<height&&xcint-a>=0&&ycint+b>=0&&xcint-a<width){
+                    circles[ycint+b][xcint-a][0]=colors[0],circles[ycint+b][xcint-a][1]=colors[1],circles[ycint+b][xcint-a][2]=colors[2];
+                    // cout << circles[ycint+b][xcint-a][0];
+                    }
+                    if(ycint-b>=0&&xcint-a>=0&&ycint-b<height&&xcint-a<width){
+                    circles[ycint-b][xcint-a][0]=colors[0],circles[ycint-b][xcint-a][1]=colors[1],circles[ycint-b][xcint-a][2]=colors[2];
+                    // cout << circles[ycint-b][xcint-a][0];
+                    }
+                    if(ycint+a<height&&xcint+b<width&&ycint+a>=0&&xcint+b>=0){
+                    circles[ycint+a][xcint+b][0]=colors[0],circles[ycint+a][xcint+b][1]=colors[1],circles[ycint+a][xcint+b][2]=colors[2];
+                    // cout << circles[ycint+a][xcint+b][0];
+                    }
+                    if(ycint-a>=0&&xcint+b<width&&ycint-a<height&&xcint+b>=0){
+                    circles[ycint-a][xcint+b][0]=colors[0],circles[ycint-a][xcint+b][1]=colors[1],circles[ycint-a][xcint+b][2]=colors[2];
+                    // cout << circles[ycint-a][xcint+b][0];
+                    }
+                    if(ycint+a<height&&xcint-b>=0&&ycint+a>=0&&xcint-b<width){
+                    circles[ycint+a][xcint-b][0]=colors[0],circles[ycint+a][xcint-b][1]=colors[1],circles[ycint+a][xcint-b][2]=colors[2];
+                    // cout << circles[ycint+a][xcint-b][0];
+                    }
+                    if(ycint-a>=0&&xcint-b>=0&&ycint-a<height&&xcint-b<width){
+                    circles[ycint-a][xcint-b][0]=colors[0],circles[ycint-a][xcint-b][1]=colors[1],circles[ycint-a][xcint-b][2]=colors[2];
+                    // cout << circles[ycint-a][xcint-b][0];
+                    }
+                
+                b2_new -=(2*a)-3;
+            }
         }
-        if (ycint + b < height && xcint + a < width && ycint + b >= 0 && xcint + a >= 0)
-            circles[ycint + b][xcint + a][0] = colors[0], circles[ycint + b][xcint + a][1] = colors[1], circles[ycint + b][xcint + a][2] = colors[2];
-        if (ycint - b >= 0 && xcint + a < width && ycint - b < height && xcint + a >= 0)
-            circles[ycint - b][xcint + a][0] = colors[0], circles[ycint - b][xcint + a][1] = colors[1], circles[ycint - b][xcint + a][2] = colors[2];
-        if (ycint + b < height && xcint - a >= 0 && ycint + b >= 0 && xcint - a < width)
-            circles[ycint + b][xcint - a][0] = colors[0], circles[ycint + b][xcint - a][1] = colors[1], circles[ycint + b][xcint - a][2] = colors[2];
-        if (ycint - b >= 0 && xcint - a >= 0 && ycint - b < height && xcint - a < width)
-            circles[ycint - b][xcint - a][0] = colors[0], circles[ycint - b][xcint - a][1] = colors[1], circles[ycint - b][xcint - a][2] = colors[2];
-        if (ycint + a < height && xcint + b < width && ycint + a >= 0 && xcint + b >= 0)
-            circles[ycint + a][xcint + b][0] = colors[0], circles[ycint + a][xcint + b][1] = colors[1], circles[ycint + a][xcint + b][2] = colors[2];
-        if (ycint - a >= 0 && xcint + b < width && ycint - a < height && xcint + b >= 0)
-            circles[ycint - a][xcint + b][0] = colors[0], circles[ycint - a][xcint + b][1] = colors[1], circles[ycint - a][xcint + b][2] = colors[2];
-        if (ycint + a < height && xcint - b >= 0 && ycint + a >= 0 && xcint - b < width)
-            circles[ycint + a][xcint - b][0] = colors[0], circles[ycint + a][xcint - b][1] = colors[1], circles[ycint + a][xcint - b][2] = colors[2];
-        if (ycint - a >= 0 && xcint - b >= 0 && ycint - a < height && xcint - b < width)
-            circles[ycint - a][xcint - b][0] = colors[0], circles[ycint - a][xcint - b][1] = colors[1], circles[ycint - a][xcint - b][2] = colors[2];
-
-        b2_new -= (2 * a) - 3;
-    }
-}
+int circle(int xcint, int ycint, int radius, int width, int height){ //draw circle of 2 with specified color at the x and y coordinate
+            //colors is an array of 3 ints to represent RGB for drawing
+            int a, b, xmax, b2, b2_new, tb;
+            int count = 0;
+            xmax = int(radius*0.70710678+0.5);
+            b = int(radius+0.5);
+            b2 = b*b;
+            tb = (2*b)-1;
+            b2_new = b2;
+            for(a = 0; a<=xmax+1; a++){
+                if(b2-b2_new>=tb){
+                    b2 -=tb;
+                    b-=1;
+                    tb-=2;
+                }
+                   if(ycint+b<height&&xcint+a<width&&ycint+b>=0&&xcint+a>=0){
+                       if(edge[ycint+b][xcint+a]==1){
+                           count++;
+                       }
+                   }
+                    if(ycint-b>=0&&xcint+a<width&&ycint-b<height&&xcint+a>=0){
+                        if(edge[ycint-b][xcint+a]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint+b<height&&xcint-a>=0&&ycint+b>=0&&xcint-a<width){
+                        if(edge[ycint+b][xcint-a]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint-b>=0&&xcint-a>=0&&ycint-b<height&&xcint-a<width){
+                        if(edge[ycint-b][xcint-a]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint+a<height&&xcint+b<width&&ycint+a>=0&&xcint+b>=0){
+                        if(edge[ycint+a][xcint+b]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint-a>=0&&xcint+b<width&&ycint-a<height&&xcint+b>=0){
+                        if(edge[ycint-a][xcint+b]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint+a<height&&xcint-b>=0&&ycint+a>=0&&xcint-b<width){
+                        if(edge[ycint+a][xcint-b]==1){
+                            count++;
+                        }
+                    }
+                    if(ycint-a>=0&&xcint-b>=0&&ycint-a<height&&xcint-b<width){
+                        if(edge[ycint-a][xcint-b]==1){
+                            count++;
+                        }
+                    }
+                
+                b2_new -=(2*a)-3;
+            }
+            return count;
+        }
 void drawLine(int x, int y, int xs, int ys) {
     if (x == xs) {
         for (int b = std::min(y, ys); b <= std::max(y, ys); b++) {
@@ -152,25 +230,25 @@ void part1() {
     const int width = std::stoi(line.substr(0, line.find(" ")), 0, 10);
     const int height = std::stoi(line.substr(line.find(" ") + 1), 0, 10);
     int*** original = new int** [width];
-    for (int i = 0; i < width; i++) {
-        original[i] = new int* [height];
-        for (int j = 0; j < height; j++) {
-            original[i][j] = new int[3];
-            for (int x = 0; x < 3; x++) {
-                original[i][j][x] = 0;
+        for (int i = 0; i < width; i++) {
+            original[i] = new int* [height];
+            for (int j = 0; j < height; j++) {
+                original[i][j] = new int[3];
+                for(int x =0; x<3; x++){
+                    original[i][j][x] =0;
+                }
             }
-        }
     }
     int** grey = new int* [width];
     for (int i = 0; i < width; i++) {
-        grey[i] = new int[height];
+        grey[i] = new int [height];
         for (int j = 0; j < height; j++) {
             grey[i][j] = 0;
         }
     }
     int** binary = new int* [width];
     for (int i = 0; i < width; i++) {
-        binary[i] = new int[height];
+        binary[i] = new int [height];
         for (int j = 0; j < height; j++) {
             binary[i][j] = 0;
         }
@@ -178,15 +256,15 @@ void part1() {
     double** angle = new double* [width];
     for (int i = 0; i < width; i++) {
         angle[i] = new double[height];
-        for (int x = 0; x < height; x++) {
-            angle[i][x] = 0;
+        for(int x =0; x<height; x++){
+            angle[i][x]=0;
         }
     }
     double** angle2 = new double* [height];
     for (int i = 0; i < height; i++) {
         angle2[i] = new double[width];
-        for (int x = 0; x < width; x++) {
-            angle2[i][x] = 0;
+        for(int x =0; x<width; x++){
+            angle2[i][x]=0;
         }
     }
     getline(infile, line);
@@ -201,7 +279,7 @@ void part1() {
             line = line.substr(line.find(" ") + 1);
             original[count % (width)][count / width][0] = r;
             original[count % (width)][count / width][1] = g;
-            original[count % (width)][count / width][2] = b;
+            original[count % (width)][count / width][2] = b;           
             grey[count % (width)][count / width] = (r + g + b) / 3;
             count++;
         }
@@ -236,17 +314,17 @@ void part1() {
     //hystheris
     int** h = new int* [width];
     for (int i = 0; i < width; i++) {
-        h[i] = new int[height];
+        h[i] = new int [height];
         for (int j = 0; j < height; j++) {
-            h[i][j] = 0;
+            h[i][j] =0;
         }
     }
-    const int low = 100;
-    const int high = 200;
+    const int low = 150;
+    const int high = 250;
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             if (binary[x][y] >= high) {
-                h[x][y] = 2;
+                h[x][y]=2;
             }
             else if (binary[x][y] >= low && binary[x][y] < high) {
                 h[x][y] = 1;
@@ -256,7 +334,7 @@ void part1() {
             else {
                 h[x][y] = 0;
                 h[x][y] = 0;
-                h[x][y] = 0;
+                h[x][y]= 0;
             }
         }
     }
@@ -266,8 +344,8 @@ void part1() {
     bool** visited = new bool* [width];
     for (int i = 0; i < width; i++) {
         visited[i] = new bool[height];
-        for (int x = 0; x < height; x++) {
-            visited[i][x] = false;
+        for(int x =0; x<height; x++){
+            visited[i][x]=false;
         }
     }
     while (!done) {
@@ -354,7 +432,7 @@ void part1() {
     //nonmax supression
     int** n = new int* [width];
     for (int i = 0; i < width; i++) {
-        n[i] = new int[height];
+        n[i] = new int [height];
         for (int j = 0; j < height; j++) {
             n[i][j] = 0;
         }
@@ -367,25 +445,25 @@ void part1() {
                 angle[x][y] = int(angle[x][y] - (22.5)) / 45 * 45;
             if (angle[x][y] == 0 || angle[x][y] == 180 || angle[x][y] == -0 || angle[x][y] == -180) {
                 if (binary[x][y] >= binary[x - 1][y] && binary[x][y] >= binary[x + 1][y]) {
-                    n[x][y] = 1;
+                    n[x][y]=1;
                 }
             }
             else if (angle[x][y] == 45 || angle[x][y] == -135) {
                 //diagnol comparison up right
                 if (binary[x][y] >= binary[x + 1][y + 1] && binary[x][y] >= binary[x - 1][y - 1]) {
-                    n[x][y] = 1;
+                    n[x][y] =1;
                 }
             }
             else if (angle[x][y] == 135 || angle[x][y] == -45) {
                 //diagnol comparison up left
                 if (binary[x][y] >= binary[x - 1][y + 1] && binary[x][y] >= binary[x + 1][y - 1]) {
-                    n[x][y] = 1;
+                    n[x][y]=1;
                 }
             }
             else if (angle[x][y] == 90 || angle[x][y] == angle[x][y] == -90) {
                 //vertical comparison
                 if (binary[x][y] >= binary[x][y - 1] && binary[x][y] >= binary[x][y + 1]) {
-                    n[x][y] = 1;
+                    n[x][y]=1;
                 }
             }
         }
@@ -415,9 +493,9 @@ void part1() {
         }
     }
     myfile.close();
-    int** edge = new int* [width];
+    edge = new int* [width];
     for (int i = 0; i < width; i++) {
-        edge[i] = new int[height];
+        edge[i] = new int [height];
     }
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++)
@@ -480,10 +558,6 @@ void part1() {
                         endx = width - 1;
                         endy = slope * (endx - i) + j;
                     }
-                    // if (endy == height)
-                    //     endy--;
-                    // if (endx == width)
-                    //     endx--;
                     drawLine(startx, starty, endx, endy);
                 }
                 //y-j = m(x-i)
@@ -499,7 +573,7 @@ void part1() {
     }
     myfile.open("imagev.ppm"); //write to output.ppm
     //if(max<255){
-    myfile << "P3 " << width << " " << height << " " << max << "\n";
+    myfile << "P3 " << width << " " << height << " " << max<< "\n";
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             for (int k = 0; k < 3; k++)
@@ -513,43 +587,95 @@ void part1() {
         circles[i] = new int* [width];
         for (int j = 0; j < width; j++) {
             circles[i][j] = new int[3];
-            for (int x = 0; x < 3; x++) {
-                circles[i][j][x] = 0;
+            for(int x =0; x<3; x++){
+                circles[i][j][x]=0;
             }
         }
     }
-    int red[] = { 255, 0, 0 };
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            if (votes[i][j] >= 0.7 * max) {
-                for (int x = 0; x < 6; x++)
+    int red[3] = {255, 0, 0};
+    for(int i=0; i<height; i++){
+        for(int j=0; j<width;j++){
+            if(votes[i][j]>=0.7*max){
+                for(int x= 0; x<6; x++)
                     drawCircle(j, i, red, x, width, height);
             }
         }
     }
     myfile.open("imageCC.ppm"); //write to output.ppm
-    myfile << "P3 " << width << " " << height << " " << 255 << "\n";
+    myfile << "P3 " << width << " " << height << " " << 255<< "\n";
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (circles[i][j][0] == 255 && circles[i][j][1] == 0 && circles[i][j][2] == 0) {
-                myfile << "255 0 0 ";
+            if(circles[i][j][0]==255&&circles[i][j][1]==0&&circles[i][j][2]==0){
+                    myfile << "255 0 0 ";
             }
-            else {
-                myfile << original[j][i][0] << ' ' << original[j][i][1] << ' ' << original[j][i][2] << ' ';
+            else{
+                myfile << original[j][i][0] << ' '<< original[j][i][1] << ' ' << original[j][i][2] << ' ';
             }
         }
         myfile << "\n";
     }
     myfile.close();
-    //make line equation
-    //test at x 0 and 700 to see where the end points should be
-    //using the line algo from those end poist add a vote for each (make a vote matrix of mxn)
-    //votes > threshold are centers
-
-    //using circle ago
-    //for each center make a radius from 0 to some max radius (width or height / 2 depending on which one is bigger?)
-    //count how many points the center gets per radius
-    //each radius > threshold is a correct radius for the center
+    radius = new int** [height];
+    for (int i = 0; i < height; i++) {
+        radius[i] = new int* [width];
+        for (int j = 0; j < width; j++) {
+            radius[i][j] = new int[0];
+        }
+    }
+    for (int i = 0; i < height; i++) {
+        circles[i] = new int* [width];
+        for (int j = 0; j < width; j++) {
+            circles[i][j] = new int[3];
+            for(int x =0; x<3; x++){
+                circles[i][j][x]=0;
+            }
+        }
+    }
+    //cout << "new\n";
+    const int maxr = 500; //change this later
+    const int radiusthreshold = 80;
+    //delete red;
+    //red[3] = {255, 0, 0};
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if(votes[i][j]>=0.7*max){
+                bool arr[maxr] = {false};
+                int count =0;
+                for(int r = 1; r<=maxr; r++){
+                    if (circle(i, j, r, width, height) > radiusthreshold){
+                        arr[r] = true;
+                        count++;
+                    }
+                }
+                int* radiuses = new int[count];
+                count = 0;
+                for(int x =0; x< maxr; x++){
+                    if(arr[x]){
+                        radiuses[count] = x;
+                        count++;
+                    }
+                }
+                radius[i][j] = radiuses;
+                for(int x=0;x<sizeof(radiuses);x++)
+                    drawCircle(j, i, red, radiuses[x], width, height);
+            }
+        }
+    }
+    //cout << red[0] << " " << red[1] << " " <<red[2] << " ";
+    myfile.open("imagecircles.ppm"); //write to output.ppm
+    myfile << "P3 " << width << " " << height << " " << 255<< "\n";
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if(circles[i][j][0]==255&&circles[i][j][1]==0&&circles[i][j][2]==0){
+                    myfile << "255 0 0 ";
+            }
+            else{
+                myfile << original[j][i][0] << ' '<< original[j][i][1] << ' ' << original[j][i][2] << ' ';
+            }
+        }
+        myfile << "\n";
+    }
+    myfile.close();
 
     //for each center, look at the correct radiuses and determine from size and color what kind of coin it is
     //use percentages
