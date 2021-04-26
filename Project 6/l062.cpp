@@ -8,6 +8,7 @@
 #include <vector> 
 #include <chrono> 
 #include <string>
+#include <algorithm>    // std::max
 
 using namespace std;
 #define PI 3.14159265358979
@@ -632,51 +633,125 @@ void part1() {
         }
     }
     //cout << "new\n";
-    const int maxr = 500; //change this later
-    const int radiusthreshold = 80;
-    //delete red;
-    //red[3] = {255, 0, 0};
+    const int maxr = 150; //change this later
+    const int radiusthreshold = 25;
+    int sum = 0;
+    int purple[3] = {255,0,255};
+    int blue[3] = {0,0,255};
+    int green[3] = {0, 255, 0};
+    int yellow [3] = {255,255,0};
+    //int maxradius=0;
+    int quarters =0, silver =0, dime =0, nickel =0, penny=0;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             if(votes[i][j]>=0.7*max){
-                bool arr[maxr] = {false};
+                bool arr[maxr+1] = {false};
                 int count =0;
-                for(int r = 1; r<=maxr; r++){
+                for(int r = 10; r<=maxr; r++){
                     if (circle(i, j, r, width, height) > radiusthreshold){
                         arr[r] = true;
+                        //if(r>maxradius)
+                            //maxradius=r;
                         count++;
+                        sum++;
                     }
                 }
                 int* radiuses = new int[count];
                 count = 0;
-                for(int x =0; x< maxr; x++){
+                for(int x =10; x<= maxr; x++){
                     if(arr[x]){
                         radiuses[count] = x;
                         count++;
                     }
                 }
                 radius[i][j] = radiuses;
-                for(int x=0;x<sizeof(radiuses);x++)
-                    drawCircle(j, i, red, radiuses[x], width, height);
+                if(sizeof(radius[i][j] >0)){
+                for(int x=0;x<sizeof(radiuses);x++){
+                    if(radiuses[x]<=0.5*max && radiuses[x] >=10){
+                        int cr = original[j][i][0], cg = original[j][i][1], cb = original[j][i][2];
+                        int maximum = std::max(cr, cg);
+                        maximum = std::max(maximum, cb);
+                        if(cr==maximum){
+                            cg = cg*255/maximum;
+                            cb = cb*255/maximum;
+                            if(cg<125 && cb <125){
+                                drawCircle(j, i, red, radiuses[x], width, height);
+                                penny++;
+                            }
+                            else{
+                                drawCircle(j, i, blue, radiuses[x], width, height);
+                                dime++;
+                            }
+                        }
+                        else{
+                        drawCircle(j, i, blue, radiuses[x], width, height);
+                        dime++;
+                        }
+                    }
+                    else if(radiuses[x]>0.5*maxr&&radiuses[x]<=0.75*maxr){
+                        drawCircle(j, i, purple, radiuses[x], width, height);
+                        nickel++;
+                    }
+                    else if(radiuses[x]>0.75*maxr&&radiuses[x]<=0.85*maxr){
+                        drawCircle(j, i, green, radiuses[x], width, height);
+                        quarters++;
+                    }
+                    else if(radiuses[x]>0.85*maxr && radiuses[x]<=maxr){
+                        drawCircle(j, i, yellow, radiuses[x], width, height);
+                        silver++;
+                    }
+            }
+                }
             }
         }
     }
+    // for (int i = 0; i < height; i++) {
+    //     for (int j = 0; j < width; j++) {
+    //         if(votes[i][j]>=0.7*maxr)
+            
+    //     }
+    // }
     //cout << red[0] << " " << red[1] << " " <<red[2] << " ";
-    myfile.open("imagecircles.ppm"); //write to output.ppm
+    myfile.open("coins.ppm"); //write to output.ppm
     myfile << "P3 " << width << " " << height << " " << 255<< "\n";
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if(circles[i][j][0]==255&&circles[i][j][1]==0&&circles[i][j][2]==0){
-                    myfile << "255 0 0 ";
+            if(circles[i][j][0]==red[0]&&circles[i][j][1]==red[1]&&circles[i][j][2]==red[2]){
+                    myfile << red[0] << " " << red[1] << " " << red[2] << " ";
+            }
+            else if(circles[i][j][0]==blue[0]&&circles[i][j][1]==blue[1]&&circles[i][j][2]==blue[2]){
+                    myfile << blue[0] << " " << blue[1] << " " << blue[2] << " ";
+            }
+            else if(circles[i][j][0]==green[0]&&circles[i][j][1]==green[1]&&circles[i][j][2]==green[2]){
+                    myfile << green[0] << " " << green[1] << " " <<green[2] << " ";
+            }
+            else if(circles[i][j][0]==yellow[0]&&circles[i][j][1]==yellow[1]&&circles[i][j][2]==yellow[2]){
+                    myfile << yellow[0] << " " << yellow[1] << " " << yellow[2] << " ";
+            }
+            else if(circles[i][j][0]==purple[0]&&circles[i][j][1]==purple[1]&&circles[i][j][2]==purple[2]){
+                    myfile <<purple[0] << " " << purple[1] << " " << purple[2] << " ";
             }
             else{
-                myfile << original[j][i][0] << ' '<< original[j][i][1] << ' ' << original[j][i][2] << ' ';
+                for (int k = 0; k < 3; k++) {
+                if (n[j][i] == h[j][i] && h[j][i] == 1) {
+                    myfile << 255 << ' ';
+                }
+                else {
+                    myfile << 0 << ' ';
+                }
+            }
             }
         }
         myfile << "\n";
     }
+    double total = silver + 0.25*quarters+0.1*dime+0.05*nickel+0.01*penny;
     myfile.close();
-
+    myfile.open("results.txt");
+    myfile << silver << " silver dollars, " << quarters << " quarters, " << dime << " dimes, " << nickel << " nickels, and " << penny << " pennies.";
+    myfile << "Total sum: " << total;
+    myfile.close(); 
+    cout << silver << " silver dollars, " << quarters << " quarters, " << dime << " dimes, " << nickel << " nickels, and " << penny << " pennies.";
+    cout << "Total sum: " << total;
     //for each center, look at the correct radiuses and determine from size and color what kind of coin it is
     //use percentages
 
